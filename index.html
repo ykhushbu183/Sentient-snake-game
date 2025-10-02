@@ -5,29 +5,28 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Sentient Snake</title>
   <style>
-    html,body { height:100%; margin:0; font-family: Inter, system-ui, sans-serif; background:#071021; color:#fff; display:flex; align-items:center; justify-content:center; flex-direction:column; }
-    
-    /* big faded background text */
-    .bg-text {
-      position:fixed;
-      inset:0;
+    html,body {
+      height:100%;
+      margin:0;
+      font-family: Inter, system-ui, sans-serif;
       display:flex;
+      flex-direction:column;
       align-items:center;
       justify-content:center;
-      pointer-events:none;
-      z-index:0;
-    }
-    .bg-text h1 {
-      font-size:18vw;
-      margin:0;
-      line-height:0.8;
-      color:rgba(255,255,255,0.03);
-      letter-spacing:0.1em;
-      transform:rotate(-8deg);
-      user-select:none;
+      background:#000;
+      overflow:hidden;
     }
 
-    /* game wrapper (fixed box instead of fullscreen) */
+    /* background with blur */
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      background:url("assets/sentient-bg.png") center/cover no-repeat;
+      filter:blur(3px);
+      z-index:0;
+    }
+
     #wrap {
       position:relative;
       width:500px;
@@ -36,8 +35,13 @@
       border-radius:8px;
       overflow:hidden;
       z-index:1;
+      background:#111;
     }
-    canvas { display:block; width:100%; height:100%; background:#111; }
+    canvas {
+      display:block;
+      width:100%;
+      height:100%;
+    }
 
     /* HUD */
     #score {
@@ -52,11 +56,12 @@
       z-index:3;
     }
 
-    /* footer with X handle */
+    /* footer */
     #footer {
       margin-top:6px;
       font-size:14px;
       color:#ddd;
+      z-index:3;
     }
     #footer a { color:#1DA1F2; text-decoration:none; font-weight:600; }
 
@@ -76,6 +81,7 @@
       visibility:hidden;
     }
     #overlay.show { visibility:visible; }
+
     .btn {
       background:#1DA1F2;
       color:#fff;
@@ -86,7 +92,7 @@
       font-weight:600;
     }
 
-    /* small instructions top */
+    /* instructions */
     #hint {
       margin-bottom:8px;
       font-size:13px;
@@ -99,10 +105,7 @@
   </style>
 </head>
 <body>
-  <div class="bg-text"><h1>SENTIENT</h1></div>
-
   <div id="hint">Arrows / WASD to move • Space to pause</div>
-  
   <div id="wrap">
     <canvas id="game"></canvas>
     <div id="overlay">
@@ -111,11 +114,8 @@
       <button id="restartBtn" class="btn">Restart</button>
     </div>
   </div>
-
   <div id="score">Score: 0</div>
-  <div id="footer">
-    made by <a href="https://x.com/sonuwork37" target="_blank" rel="noopener noreferrer">@sonuwork37</a>
-  </div>
+  <div id="footer"> made by <a href="https://x.com/sonuwork37" target="_blank">@sonuwork37</a> </div>
 
   <script>
   (function(){
@@ -126,15 +126,11 @@
     const finalScoreEl = document.getElementById('finalScore');
     const restartBtn = document.getElementById('restartBtn');
 
-    // settings
     const cellSize = 20;
     const speedMs = 100;
-    let useLogoForFood = false; // true if you want sentient-logo.png as food
-    let foodImg = null;
-
-    // dynamic
-    const cols = 25; // 500px / 20px
+    const cols = 25;
     const rows = 25;
+
     let snake = [];
     let dir = {x:1, y:0};
     let nextDir = {x:1, y:0};
@@ -143,12 +139,16 @@
     let tickHandle = null;
     let running = true;
 
+    // load food image
+    const foodImg = new Image();
+    foodImg.src = "assets/sentient-food.png";
+
     canvas.width = 500;
     canvas.height = 500;
 
     function resetGame(){
       snake = [];
-      const startLen = 3; // <-- 3 blocks start
+      const startLen = 3;
       const cx = Math.floor(cols/2);
       const cy = Math.floor(rows/2);
       for(let i=0;i<startLen;i++){
@@ -181,9 +181,13 @@
     }
 
     function tick(){
-      if((nextDir.x === -dir.x && nextDir.y === -dir.y)){} else dir = nextDir;
+      if((nextDir.x === -dir.x && nextDir.y === -dir.y)){} 
+      else dir = nextDir;
 
-      const head = { x: (snake[0].x + dir.x + cols) % cols, y: (snake[0].y + dir.y + rows) % rows };
+      const head = { 
+        x: (snake[0].x + dir.x + cols) % cols, 
+        y: (snake[0].y + dir.y + rows) % rows 
+      };
 
       if(snake.some(s => s.x === head.x && s.y === head.y)){
         gameOver();
@@ -206,29 +210,20 @@
     function draw(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      // food
-      const fx = food.x * cellSize + 1;
-      const fy = food.y * cellSize + 1;
-      const fsz = cellSize - 2;
-
-      if(useLogoForFood && foodImg && foodImg.complete){
-        ctx.drawImage(foodImg, fx, fy, fsz, fsz);
-      } else {
-        ctx.fillStyle = "#ff6b6b";
-        ctx.beginPath();
-        ctx.arc(fx + fsz/2, fy + fsz/2, fsz/2, 0, Math.PI*2);
-        ctx.fill();
-      }
+      // draw food
+      const fx = food.x * cellSize;
+      const fy = food.y * cellSize;
+      ctx.drawImage(foodImg, fx, fy, cellSize, cellSize);
 
       // snake
       for(let i=0;i<snake.length;i++){
         const s = snake[i];
-        const x = s.x * cellSize + 1;
-        const y = s.y * cellSize + 1;
-        const w = cellSize - 2;
-        const h = cellSize - 2;
+        const x = s.x * cellSize;
+        const y = s.y * cellSize;
         ctx.fillStyle = i===0 ? "#00d1b2" : "#4caf50";
-        ctx.fillRect(x,y,w,h);
+        ctx.fillRect(x,y,cellSize,cellSize);
+        ctx.strokeStyle = "#111";
+        ctx.strokeRect(x,y,cellSize,cellSize);
       }
     }
 
@@ -245,6 +240,7 @@
       if(e.key === 'ArrowDown' || e.key === 's') nextDir = {x:0,y:1};
       if(e.key === 'ArrowLeft' || e.key === 'a') nextDir = {x:-1,y:0};
       if(e.key === 'ArrowRight' || e.key === 'd') nextDir = {x:1,y:0};
+
       if(e.key === ' '){
         if(tickHandle) { clearInterval(tickHandle); tickHandle = null; running = false; }
         else { tickHandle = setInterval(tick, speedMs); running = true; }
