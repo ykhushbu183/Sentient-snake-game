@@ -57,18 +57,20 @@
     }
 
     #footer {
-    position: fixed;   /* fixed kiya taaki hamesha screen ke corner me rahe */
-    bottom: 10px;
-    right: 10px;       /* yaha left:10px karoge to bottom-left me aayega */
-    font-size: 14px;
-    color: #ddd;
-    z-index: 3;
-  }
-  #footer a {
-    color: #1DA1F2;
-    text-decoration: none;
-    font-weight: 600;
-  }
+      position: fixed;
+      top: 50%;                 
+      right: 10px;              
+      transform: translateY(-50%); 
+      font-size: 14px;
+      color: #ddd;
+      z-index: 3;
+    }
+    #footer a {
+      color: #1DA1F2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
 
     #overlay {
       position:absolute;
@@ -105,8 +107,7 @@
       border-radius:8px;
       z-index:3;
     }
-
-    /* --- On-screen D-Pad --- */
+ 
     #controls {
       position: absolute;
       bottom: 20px;
@@ -147,7 +148,6 @@
   </div>
   <div id="score">Score: 0</div>
 
-  <!-- On-screen D-Pad Controls -->
   <div id="controls">
     <div class="empty"></div>
     <button class="ctrl-btn" data-dir="up">⬆️</button>
@@ -290,7 +290,6 @@
       overlay.classList.add('show');
     }
 
-    // Keyboard
     window.addEventListener('keydown', (e) => {
       if(!running) return;
       if(e.key === 'ArrowUp' || e.key === 'w') nextDir = {x:0,y:-1};
@@ -303,7 +302,6 @@
       }
     });
 
-    // On-screen D-pad Controls
     document.querySelectorAll(".ctrl-btn").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const dirType = btn.dataset.dir;
