@@ -105,7 +105,7 @@
   </style>
 </head>
 <body>
-  <div id="hint">Arrows / WASD to move • Space to pause</div>
+  <div id="hint">Arrows / WASD • Space = pause • Swipe on mobile</div>
   <div id="wrap">
     <canvas id="game"></canvas>
     <div id="overlay">
@@ -234,6 +234,7 @@
       overlay.classList.add('show');
     }
 
+    // --- Keyboard Controls (PC) ---
     window.addEventListener('keydown', (e) => {
       if(!running) return;
       if(e.key === 'ArrowUp' || e.key === 'w') nextDir = {x:0,y:-1};
@@ -244,6 +245,31 @@
       if(e.key === ' '){
         if(tickHandle) { clearInterval(tickHandle); tickHandle = null; running = false; }
         else { tickHandle = setInterval(tick, speedMs); running = true; }
+      }
+    });
+
+    // --- Touch Controls (Mobile Swipe) ---
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    canvas.addEventListener('touchstart', (e)=>{
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+    });
+
+    canvas.addEventListener('touchend', (e)=>{
+      if(!running) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+
+      if(Math.abs(dx) > Math.abs(dy)){
+        if(dx > 30) nextDir = {x:1, y:0};   // right
+        else if(dx < -30) nextDir = {x:-1, y:0}; // left
+      } else {
+        if(dy > 30) nextDir = {x:0, y:1};   // down
+        else if(dy < -30) nextDir = {x:0, y:-1}; // up
       }
     });
 
