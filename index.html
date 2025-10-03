@@ -57,12 +57,18 @@
     }
 
     #footer {
-      margin-top:6px;
-      font-size:14px;
-      color:#ddd;
-      z-index:3;
-    }
-    #footer a { color:#1DA1F2; text-decoration:none; font-weight:600; }
+    position: fixed;   /* fixed kiya taaki hamesha screen ke corner me rahe */
+    bottom: 10px;
+    right: 10px;       /* yaha left:10px karoge to bottom-left me aayega */
+    font-size: 14px;
+    color: #ddd;
+    z-index: 3;
+  }
+  #footer a {
+    color: #1DA1F2;
+    text-decoration: none;
+    font-weight: 600;
+  }
 
     #overlay {
       position:absolute;
