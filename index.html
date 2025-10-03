@@ -100,21 +100,24 @@
       z-index:3;
     }
 
-    /* --- On-screen controls (D-pad) --- */
+    /* --- On-screen D-Pad --- */
     #controls {
-      margin-top:12px;
-      display:grid;
+      position: absolute;
+      bottom: 20px;
+      display: grid;
       grid-template-columns: 60px 60px 60px;
       grid-template-rows: 60px 60px 60px;
-      gap:8px;
-      justify-content:center;
-      align-items:center;
-      user-select:none;
+      gap: 5px;
+      justify-content: center;
+      align-items: center;
+      z-index: 5;
     }
     .ctrl-btn {
+      width:60px;
+      height:60px;
       background:#1DA1F2;
       color:#fff;
-      font-size:22px;
+      font-size:20px;
       border:none;
       border-radius:8px;
       display:flex;
@@ -123,11 +126,11 @@
       cursor:pointer;
     }
     .ctrl-btn:active { background:#0d8ddb; }
+    .empty { visibility:hidden; }
   </style>
 </head>
 <body>
-  <div id="hint">Arrows / WASD • Space = pause • Buttons for mobile</div>
-
+  <div id="hint">Arrows / WASD • Space = pause • Buttons on mobile</div>
   <div id="wrap">
     <canvas id="game"></canvas>
     <div id="overlay">
@@ -136,20 +139,21 @@
       <button id="restartBtn" class="btn">Restart</button>
     </div>
   </div>
-
   <div id="score">Score: 0</div>
 
-  <!-- On-screen D-pad Controls -->
+  <!-- On-screen D-Pad Controls -->
   <div id="controls">
-    <div></div>
+    <div class="empty"></div>
     <button class="ctrl-btn" data-dir="up">⬆️</button>
-    <div></div>
+    <div class="empty"></div>
+
     <button class="ctrl-btn" data-dir="left">⬅️</button>
-    <div></div>
+    <div class="empty"></div>
     <button class="ctrl-btn" data-dir="right">➡️</button>
-    <div></div>
+
+    <div class="empty"></div>
     <button class="ctrl-btn" data-dir="down">⬇️</button>
-    <div></div>
+    <div class="empty"></div>
   </div>
 
   <div id="footer"> made by <a href="https://x.com/sonuwork37" target="_blank">@sonuwork37</a> </div>
@@ -172,7 +176,7 @@
     let score = 0;
     let tickHandle = null;
     let running = true;
-    const speedMs = 100;
+    const speedMs = 120;
 
     const foodImg = new Image();
     foodImg.src = "assets/sentient-food.png";
@@ -298,10 +302,10 @@
       btn.addEventListener("click", ()=>{
         const dirType = btn.dataset.dir;
         if(!running) return;
-        if(dirType==="up") nextDir = {x:0,y:-1};
-        if(dirType==="down") nextDir = {x:0,y:1};
-        if(dirType==="left") nextDir = {x:-1,y:0};
-        if(dirType==="right") nextDir = {x:1,y:0};
+        if(dirType==="up" && dir.y !== 1) nextDir = {x:0,y:-1};
+        if(dirType==="down" && dir.y !== -1) nextDir = {x:0,y:1};
+        if(dirType==="left" && dir.x !== 1) nextDir = {x:-1,y:0};
+        if(dirType==="right" && dir.x !== -1) nextDir = {x:1,y:0};
       });
     });
 
