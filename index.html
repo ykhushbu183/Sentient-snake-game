@@ -28,7 +28,7 @@
 
     #wrap {
       position:relative;
-      width:90vmin; /* responsive size */
+      width:90vmin;
       height:90vmin;
       max-width:500px;
       max-height:500px;
@@ -99,10 +99,35 @@
       border-radius:8px;
       z-index:3;
     }
+
+    /* --- On-screen controls --- */
+    #controls {
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 60px 60px 60px;
+      grid-template-rows: 60px 60px 60px;
+      gap:8px;
+      justify-content:center;
+      align-items:center;
+      user-select:none;
+    }
+    .ctrl-btn {
+      background:#1DA1F2;
+      color:#fff;
+      font-size:20px;
+      border:none;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .ctrl-btn:active { background:#0d8ddb; }
+    #controls div { display:flex; justify-content:center; }
   </style>
 </head>
 <body>
-  <div id="hint">Arrows / WASD • Space = pause • Swipe on mobile</div>
+  <div id="hint">Arrows / WASD • Space = pause • Swipe or Buttons on mobile</div>
   <div id="wrap">
     <canvas id="game"></canvas>
     <div id="overlay">
@@ -112,6 +137,20 @@
     </div>
   </div>
   <div id="score">Score: 0</div>
+
+  <!-- On-screen D-pad Controls -->
+  <div id="controls">
+    <div></div>
+    <button class="ctrl-btn" data-dir="up">⬆️</button>
+    <div></div>
+    <button class="ctrl-btn" data-dir="left">⬅️</button>
+    <div></div>
+    <button class="ctrl-btn" data-dir="right">➡️</button>
+    <div></div>
+    <button class="ctrl-btn" data-dir="down">⬇️</button>
+    <div></div>
+  </div>
+
   <div id="footer"> made by <a href="https://x.com/sonuwork37" target="_blank">@sonuwork37</a> </div>
 
   <script>
@@ -192,7 +231,6 @@
         y: snake[0].y + dir.y
       };
 
-      // border hit = game over
       if(head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows){
         gameOver();
         return;
@@ -254,29 +292,16 @@
       }
     });
 
-    // Swipe (Mobile)
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    canvas.addEventListener('touchstart', (e)=>{
-      const t = e.touches[0];
-      touchStartX = t.clientX;
-      touchStartY = t.clientY;
-    });
-
-    canvas.addEventListener('touchend', (e)=>{
-      if(!running) return;
-      const t = e.changedTouches[0];
-      const dx = t.clientX - touchStartX;
-      const dy = t.clientY - touchStartY;
-
-      if(Math.abs(dx) > Math.abs(dy)){
-        if(dx > 30) nextDir = {x:1, y:0};
-        else if(dx < -30) nextDir = {x:-1, y:0};
-      } else {
-        if(dy > 30) nextDir = {x:0, y:1};
-        else if(dy < -30) nextDir = {x:0, y:-1};
-      }
+    // On-screen D-pad Controls
+    document.querySelectorAll(".ctrl-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const dirType = btn.dataset.dir;
+        if(!running) return;
+        if(dirType==="up") nextDir = {x:0,y:-1};
+        if(dirType==="down") nextDir = {x:0,y:1};
+        if(dirType==="left") nextDir = {x:-1,y:0};
+        if(dirType==="right") nextDir = {x:1,y:0};
+      });
     });
 
     restartBtn.addEventListener('click', resetGame);
