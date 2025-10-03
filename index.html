@@ -100,7 +100,7 @@
       z-index:3;
     }
 
-    /* --- On-screen controls --- */
+    /* --- On-screen controls (D-pad) --- */
     #controls {
       margin-top:12px;
       display:grid;
@@ -114,7 +114,7 @@
     .ctrl-btn {
       background:#1DA1F2;
       color:#fff;
-      font-size:20px;
+      font-size:22px;
       border:none;
       border-radius:8px;
       display:flex;
@@ -123,11 +123,11 @@
       cursor:pointer;
     }
     .ctrl-btn:active { background:#0d8ddb; }
-    #controls div { display:flex; justify-content:center; }
   </style>
 </head>
 <body>
-  <div id="hint">Arrows / WASD • Space = pause • Swipe or Buttons on mobile</div>
+  <div id="hint">Arrows / WASD • Space = pause • Buttons for mobile</div>
+
   <div id="wrap">
     <canvas id="game"></canvas>
     <div id="overlay">
@@ -136,6 +136,7 @@
       <button id="restartBtn" class="btn">Restart</button>
     </div>
   </div>
+
   <div id="score">Score: 0</div>
 
   <!-- On-screen D-pad Controls -->
