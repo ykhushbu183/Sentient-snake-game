@@ -1,12 +1,15 @@
 🐍 Sentient-snake
+
 A sleek, modern reimagination of the classic Snake game  with a sentient glow aesthetic and responsive design for both PC & mobile.
 
 ✨Game Description
+
 Sentient Snake is the classic snake game reinvented with a neon, cyberpunk vibe.  
 Guide the snake to eat glowing food, grow longer, and avoid hitting walls or yourself.  
 The game features stylish visuals, mobile-friendly controls, and smooth gameplay for all devices.
 
 🛠️Features
+
 - Neon / Sentient-themed UI and blurred background  
 - Responsive canvas that adapts to screen size (mobile, tablet, desktop)  
 - Keyboard (Arrow keys / WASD) + on-screen D-Pad buttons for mobile  
@@ -15,6 +18,7 @@ The game features stylish visuals, mobile-friendly controls, and smooth gameplay
 - Easy to extend (replace food/ snake graphics, tweak speed, etc.)
 
 🎮 How to Play
+
 1. Upon loading, the game starts (or press **Restart**).  
 2. **Move Controls**:  
    - **PC / Desktop**: Arrow keys or **WASD**  
@@ -25,5 +29,6 @@ The game features stylish visuals, mobile-friendly controls, and smooth gameplay
 6. When game over, your final score appears — click **Restart** to play again.
 
 ✍️ Credits
+
 Game developed by @ykhushbu183
 Inspired by classic Snake + modern Neon / Sentient aesthetic
